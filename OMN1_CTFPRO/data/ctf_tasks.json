@@ -1,0 +1,10 @@
+[
+  { "name": "PassCode", "difficulty": "easy", "path": "tasks/passcode_solver.py" },
+  { "name": "Lesson Learned?", "difficulty": "easy", "path": "tasks/lesson_learned_solver.py" },
+  { "name": "The Game v2", "difficulty": "easy", "path": "solvers/thegamev2_solver.py" },
+  { "name": "FlagVault", "difficulty": "easy", "path": "solvers/flagvault_solver.py" },
+  { "name": "FlagVault V2", "difficulty": "easy", "path": "solvers/flagvault_v2_solver.py" },
+  { "name": "A Bucket of Phish", "difficulty": "easy", "path": "solvers/a_bucket_of_phish_solver.py" },
+  { "name": "Pyrat", "difficulty": "easy", "path": "solvers/pyrat_solver.py" },
+  { "name": "Cheesy", "difficulty": "easy", "path": "solvers/cheesy_solver.py" }
+]
