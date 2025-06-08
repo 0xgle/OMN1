@@ -1,7 +1,0 @@
-
-BSSID, First time seen, Last time seen, channel, Speed, Privacy, Cipher, Authentication, Power, # beacons, # IV, LAN IP, ID-length, ESSID, Key
-5C:7B:5C:45:01:E4, 2025-06-08 19:26:55, 2025-06-08 19:27:14,  7, 720, WPA2, CCMP, PSK, -95,      157,        6,   0.  0.  0.  0,  23, PLAY_Swiatlowodowy_01E3, 
-
-Station MAC, First time seen, Last time seen, Power, # packets, BSSID, Probed ESSIDs
-DA:AE:07:C6:1F:6A, 2025-06-08 19:27:08, 2025-06-08 19:27:12, -84,        6, 5C:7B:5C:45:01:E4,
-
