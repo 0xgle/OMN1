@@ -12,7 +12,7 @@ It provides step-by-step automation and walkthroughs for solving Capture The Fla
 - 💾 JSON-based task tracking
 
 ## 📂 Structure
-
+```
 OMN1_CTFPRO/
 ├── core/
 │ └── task_manager.py
@@ -25,34 +25,27 @@ OMN1_CTFPRO/
 │ └── ctf_tasks.json
 ├── omn1_ctfpro.py
 └── README.md
-
+```
 
 ## 🚀 Usage
 
 ```bash
 python3 omn1_ctfpro.py
 
-✅ Completed Solvers
+### ✅ Completed Solvers
 
-    PassCode
-
-    Lesson Learned
-
-    Cheesy CTF
-
-    Pyrat
-
-    FlagVault
-
-    The Game v2
-
-    A Bucket of Phish
-    
-    MORE IN PROGRESS....
+- `PassCode`
+- `Lesson Learned`
+- `Cheesy CTF`
+- `Pyrat`
+- `FlagVault`
+- `The Game v2`
+- `A Bucket of Phish`
+- _...more in progress_
     
 📌 Author
 
-Developed by mgledev — a framework for structured, CTF training.\
+Developed by mgledev — a framework for structured, CTF training.
 
 📄 License
 
