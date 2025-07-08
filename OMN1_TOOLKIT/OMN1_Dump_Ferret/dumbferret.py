@@ -134,7 +134,7 @@ if __name__ == "__main__":
  / / / / / / / __ `__ \/ __ \/ /_  / _ \/ ___/ ___/ _ \/ __/
 / /_/ / /_/ / / / / / / /_/ / __/ /  __/ /  / /  /  __/ /_  
 \_____/\__,_/_/ /_/ /_/ .___/_/    \___/_/  /_/   \___/\__/  
-                     /_/           (OMN1: mgledev) 
+                     /_/           (OMN1: 0xgle)
 [1] Scan dump and extract IOCs
 [2] Crack hashes using John the Ripper
 [3] Generate PDF report

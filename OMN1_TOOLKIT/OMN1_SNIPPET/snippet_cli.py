@@ -12,7 +12,7 @@ BANNER = r"""
 ██║   ██║██╔████╔██║██╔██╗ ██║╚██║
 ██║   ██║██║╚██╔╝██║██║╚██╗██║ ██║
 ╚██████╔╝██║ ╚═╝ ██║██║ ╚████║ ██║
- ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═══╝ ╚═╝   SNIPPET by mgledev
+ ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═══╝ ╚═╝   SNIPPET by 0xgle
 """
 
 SNIPPET_DIR = os.path.join(os.path.dirname(__file__), "snippets")

@@ -57,7 +57,7 @@ def banner():
 ██║   ██║██╔████╔██║██╔██╗ ██║╚██║
 ██║   ██║██║╚██╔╝██║██║╚██╗██║ ██║
 ╚██████╔╝██║ ╚═╝ ██║██║ ╚████║ ██║
- ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═══╝ ╚═╝  WPA AUTO HANDSHAKE CRACK EDUCATIONAL by mgledev
+ ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═══╝ ╚═╝  WPA AUTO HANDSHAKE CRACK EDUCATIONAL by 0xgle
 """)
 
 

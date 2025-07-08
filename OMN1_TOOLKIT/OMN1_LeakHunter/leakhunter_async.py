@@ -246,7 +246,7 @@ def show_menu():
     | |    / _ \/ _` | |/ / '_ \| | | | '_ \| __/ _ \ '__|
     | |___|  __/ (_| |   <| | | | |_| | | | | ||  __/ |   
     |______\___|\__,_|_|\_\_| |_|\__,_|_| |_|\__\___|_|   
-                                                        (OMN1)
+                                                        (OMN1 by 0xgle)
         """)
         print("1) Quick Scan – domyślne słowa kluczowe")
         print("2) Custom Scan – własne słowa kluczowe")
