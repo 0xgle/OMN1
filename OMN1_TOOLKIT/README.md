@@ -1,59 +1,88 @@
 # 🛠 OMN1_TOOLKIT
 
-**OMN1_TOOLKIT** is a curated collection of red-team and offensive security tools developed as part of the **OMN1 framework** by `mgledev`.
+**OMN1_TOOLKIT** is a curated collection of red-team and offensive security tools developed as part of the OMN1 framework by **mgledev**.
 
-These tools are designed to assist during penetration testing, CTFs, and offensive operations — all written with clarity, modularity, and extensibility in mind.
+These tools are designed to assist during **penetration testing**, **CTFs**, **incident response**, **threat analysis**, and **red-team operations** — all written with clarity, modularity, and extensibility in mind.
 
 ---
 
 ## 📦 Included Tools
 
-### 1. 🔍 DumpFerret
-
-**Dump analysis & enrichment tool** that scans credential leaks and performs:
+### 1. 🔍 DumpFerret  
+**Credential leak scanner and dump analyzer**
 
 - Automatic hash extraction & identification  
-- Hash cracking with John the Ripper  
-- Integration with HIBP, VirusTotal, AbuseIPDB  
-- PDF/CSV export of results  
-- Optional Streamlit GUI  
+- Cracking support via John the Ripper  
+- Data enrichment (HaveIBeenPwned, VirusTotal, AbuseIPDB)  
+- Exports reports to PDF / CSV  
+- Optional Streamlit GUI interface  
 
-➡️ **Folder:** `OMN1_TOOLKIT/DumpFerret/`
+➡️ Folder: `OMN1_TOOLKIT/DumpFerret/`
 
+---
 
-### 2. 🕵️ LeakHunter
+### 2. 🕵️ LeakHunter  
+**Secret & credential hunting tool**
 
-Tool to **search for secrets** (e.g., API keys, credentials) in:
+- Searches GitHub repos, Pastebin-style dumps, local files  
+- Flags hardcoded secrets, API keys, leaked credentials  
+- Regex-driven scanning with false-positive filters  
 
-- Public GitHub repos  
-- Pastebin-style dumps  
-- Local text files and log folders  
+➡️ Folder: `OMN1_TOOLKIT/LeakHunter/`
 
-➡️ **Folder:** `OMN1_TOOLKIT/LeakHunter/`
+---
 
+### 3. 📡 OMN1_WPA_AUTOCRACK_EDU  
+**Wi-Fi handshake capture and password cracking (educational)**
 
-### 3. 📡 OMN1_WPA_AUTOCRACK_EDU
+- Monitor mode activation  
+- Passive beacon scan + CSV export  
+- Handshake capture + deauth + aircrack-ng  
+- Designed to be used step-by-step by students  
+- Fully annotated for learning purposes  
 
-An **educational tool for capturing WPA2 handshakes and launching dictionary attacks**. Designed to walk students step-by-step through the attack:
+➡️ Folder: `OMN1_TOOLKIT/OMN1_WPA_AUTOCRACK_EDU/`
 
-- Enables monitor mode and surveys Wi-Fi networks  
-- Passive 10-second beacon scan + CSV output  
-- Spawns two terminal windows: capture & deauth  
-- Cracks handshake using `aircrack-ng` + custom wordlist  
-- Explained line by line for maximum learning value  
+---
 
-➡️ **Folder:** `OMN1_TOOLKIT/OMN1_WPA_AUTOCRACK_EDU/`
+### 4. 🧠 OMN1_CryptoTrace  
+**Blockchain investigation & visualization tool**
+
+- Analyze Ethereum and Bitcoin addresses  
+- Visualize transaction flow (IN/OUT) with graphing tools  
+- Drill-down capability: click and trace new addresses  
+- Risk scoring, scam detection, tagging  
+- Streamlit GUI + pyvis network visualization  
+- Generates audit-ready PDF reports  
+
+➡️ Folder: `OMN1_TOOLKIT/OMN1_CryptoTrace/`
+
+---
+
+### 5. 🧊 OMN1_Icebreaker  
+**USB-launchable recon and incident triage utility**
+
+- Collects full system intelligence (OS, users, software, AV, network)  
+- Detects suspicious software (cracks, stealer, Tor, etc.)  
+- Extracts browser history, USB device history, autoruns, firewall rules  
+- Works in **user** and **admin** mode  
+- Generates plaintext or encrypted forensic reports  
+- Two modes: local (write to USB) or remote (send to server)  
+- Cross-platform: Windows and Linux versions available  
+
+➡️ Folder: `OMN1_TOOLKIT/OMN1_Icebreaker/`
 
 ---
 
 ## 📜 License
 
 This toolkit is part of the **OMN1 framework** and is released under the **MIT License**.  
-You are free to use, modify, and share it for personal or professional purposes — just give credit to **mgledev**.
+You are free to **use**, **modify**, and **share** it for personal or professional purposes — just give credit to **mgledev**.
 
 ---
 
 ## 🚀 Author
 
-**Made with ❤️ by [mgledev](https://github.com/mgledev)**  
-Security enthusiast, builder of offensive tools & automation.
+**Made with ❤️ by [0xgle](https://github.com/mgledev)**  
+Security enthusiast, builder of offensive tools & automation.  
+_"Think like an attacker, act like a guardian."_
